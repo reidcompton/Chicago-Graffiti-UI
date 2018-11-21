@@ -10,16 +10,35 @@
     </div>
     <div class="columns is-centered is-multiline" v-if="graffiti.length == 0 && showMap == null">
       <div class="column is-three-quarters-desktop is-three-quarters-tablet is-full-mobile is-centered columns">
-        <input class="column is-full" v-model="query.aldermanName" placeholder="Enter your Alderman's Name">
+        <h2>
+          Graffiti Records
+        </h2>
+      </div>
+      <div class="column is-three-quarters-desktop is-three-quarters-tablet is-full-mobile columns">
+        <p class="has-text-left">Enter your Alderman's Name</p>
       </div>
       <div class="column is-three-quarters-desktop is-three-quarters-tablet is-full-mobile is-centered columns">
-        <input class="column is-full" v-model="query.startDate" type="month" placeholder="Choose a month to search">
+        <input class="column is-full" v-model="query.aldermanName" placeholder="e.g. Ramirez">
+      </div>
+      <div class="column is-three-quarters-desktop is-three-quarters-tablet is-full-mobile columns">
+        <p class="has-text-left">Choose a month to search</p>
+      </div>
+      <div class="column is-three-quarters-desktop is-three-quarters-tablet is-full-mobile is-centered columns">
+        <input class="column is-full" v-model="query.startDate" type="month">
       </div>
       <div class="column is-half-desktop is-three-quarters-tablet is-full-mobile is-centered columns">
         <input class="column is-full" v-on:click="getGraffiti()" type="button" value="Search">
       </div>
+      <div class="column is-three-quarters-desktop is-three-quarters-tablet is-full-mobile is-centered columns">
+        <img v-show="isLoading" src="../assets/loader.svg" style="height:100px;">
+      </div>
     </div>
     <div class="columns is-centered is-multiline" v-if="graffiti.length > 0  && showMap == null" v-for="g in graffiti" v-bind:key="g.ward">
+      <div class="column is-three-quarters-desktop is-three-quarters-tablet is-full-mobile is-centered columns">
+        <h2>
+          Results
+        </h2>
+      </div>
       <div class="column is-three-quarters-desktop is-three-quarters-tablet is-full-mobile is-centered columns">
         <p>
           <strong>Alderman: </strong> {{g.alderman}}, Ward {{g.ward}}
@@ -46,6 +65,9 @@
       </div>
     </div>
     <div class="columns is-centered is-multiline" v-if="showMap != null">
+      <div id="closeMap">
+        <img v-on:click="closeMap()" src="../assets/close-button.png">
+      </div>
       <div id="map" class="column is-full-screen">
         <google-map
             :center="{lat:parseFloat(showMap.lat), lng:parseFloat(showMap.long)}"
@@ -80,15 +102,18 @@ export default {
         startDate: ''
       },
       graffiti: [],
-      showMap: null
+      showMap: null,
+      isLoading: false
     }
   },
   methods: {
     getGraffiti () {
+      this.isLoading = true
       this.feedback = null
       datalayer.get(this.query.aldermanName, this.query.startDate)
         .then((response) => response.json())
         .then((responseJSON) => {
+          this.isLoading = false
           this.graffiti = responseJSON
           if (this.graffiti.length === 0) {
             this.feedback = 'Alderman not found. Please try again.'
@@ -110,6 +135,9 @@ export default {
     },
     blankFeedback () {
       this.feedback = null
+    },
+    closeMap () {
+      this.showMap = null
     }
   }
 }
@@ -137,5 +165,19 @@ a {
 }
 #map {
   margin-top: -60px;
+}
+h2 {
+  font-weight: bold;
+  font-size:2em;
+}
+#closeMap {
+  position:fixed;
+  top:10px;
+  left:10px;
+  z-index:101;
+  cursor:pointer;
+}
+#closeMap img {
+  height:50px;
 }
 </style>
