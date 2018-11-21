@@ -30,7 +30,7 @@
         <input class="column is-full" v-on:click="getGraffiti()" type="button" value="Search">
       </div>
       <div class="column is-three-quarters-desktop is-three-quarters-tablet is-full-mobile is-centered columns">
-        <img v-show="isLoading" src="../assets/loader.svg" style="height:100px;">
+        <img v-show="isLoading" src="../assets/loader.svg" style="height:100px;" alt="loading icon by loading.io">
       </div>
     </div>
     <div class="columns is-centered is-multiline" v-if="graffiti.length > 0  && showMap == null" v-for="g in graffiti" v-bind:key="g.ward">
