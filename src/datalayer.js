@@ -1,6 +1,6 @@
 const datalayer = {
-  serviceUrl: 'http://localhost:3000/graffiti',
-  // serviceUrl: 'https://chicago-graffiti.herokuapp.com/graffiti',
+  // serviceUrl: 'http://localhost:3000/graffiti',
+  serviceUrl: 'https://chicago-graffiti.herokuapp.com/graffiti',
   get (aldermanName, startDate) {
     // create local variable for transform
     var localServiceUrl = this.serviceUrl
